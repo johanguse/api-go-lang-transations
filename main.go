@@ -19,10 +19,8 @@ func init() {
 	}
 	initializers.ConnectDB(&config)
 
-	// Create a new instance of the TransactionSeed struct
 	transactionSeed := &seeds.TransactionSeed{}
 
-	// Call the Seed method to add the transaction seed to the database
 	transactionSeed.Seed(initializers.DB)
 }
 

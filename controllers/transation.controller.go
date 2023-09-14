@@ -67,7 +67,6 @@ func UpdateTransaction(c *fiber.Ctx) error {
 		if result.Error == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No note with that Id exists"})
 		}
-		// If some other error occurred while fetching from db
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "Error fetching transaction:" + result.Error.Error()})
 	}
 

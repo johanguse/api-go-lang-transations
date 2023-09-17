@@ -31,7 +31,7 @@ go run main.go
 ```
 The server will start on http://127.0.0.1:8000/api/.
 
-You can use the healthcheck to 
+You can use the healthcheck to verify the status.
 
 ## API Reference
 

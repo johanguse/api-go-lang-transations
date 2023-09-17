@@ -10,6 +10,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+
+	fiberSwagger "github.com/swaggo/fiber-swagger"
+
+	_ "api-go-lang-transations/docs"
 )
 
 func init() {
@@ -24,6 +28,18 @@ func init() {
 	transactionSeed.Seed(initializers.DB)
 }
 
+// @title Swagger Transactions API
+// @version 1.0
+// @description This is a simple API write in Golang and Fiber to manage transactions used on Warren front-end test.
+
+// @contact.name Johan Guse
+// @contact.url https://johanguse.dev
+// @contact.email johanguse@gmail.com
+
+// @license MIT
+
+// @host http://127.0.0.1:8000
+// @BasePath /api
 func main() {
 	app := fiber.New()
 	micro := fiber.New()
@@ -52,6 +68,8 @@ func main() {
 			"message": "Welcome to Golang, Fiber, and GORM",
 		})
 	})
+
+	micro.Get("/swagger/*", fiberSwagger.WrapHandler)
 
 	log.Fatal(app.Listen(":8000"))
 }

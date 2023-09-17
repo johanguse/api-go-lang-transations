@@ -1,6 +1,6 @@
 package enums
 
-type Status string
+type Status string //@name Status
 
 const (
 	Processing Status = "processing"

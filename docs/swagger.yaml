@@ -1,0 +1,312 @@
+basePath: /api
+definitions:
+  CreateTransaction:
+    properties:
+      amount:
+        minimum: 0
+        type: number
+      description:
+        type: string
+      fromuser:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/Status'
+        enum:
+        - processing
+        - processed
+        - created
+      title:
+        type: string
+      touser:
+        type: string
+    required:
+    - amount
+    - description
+    - fromuser
+    - title
+    - touser
+    type: object
+  ResponseCode:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ResponseData:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ResponseDataWithPagination:
+    properties:
+      code:
+        type: integer
+      count:
+        type: integer
+      data: {}
+      offset:
+        type: integer
+      status:
+        type: string
+      total:
+        type: integer
+    type: object
+  Status:
+    enum:
+    - processing
+    - processed
+    - created
+    type: string
+    x-enum-varnames:
+    - Processing
+    - Processed
+    - Created
+  Transaction:
+    description: Transaction information
+    properties:
+      amount:
+        type: number
+      createdAt:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      fromUser:
+        type: string
+      id:
+        type: integer
+      status:
+        $ref: '#/definitions/Status'
+      title:
+        type: string
+      toUser:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  UpdateTransaction:
+    properties:
+      amount:
+        minimum: 0
+        type: number
+      date:
+        type: string
+      description:
+        type: string
+      fromuser:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/Status'
+        enum:
+        - processing
+        - processed
+        - created
+      title:
+        type: string
+      touser:
+        type: string
+    type: object
+host: http://127.0.0.1:8000
+info:
+  contact:
+    email: johanguse@gmail.com
+    name: Johan Guse
+    url: https://johanguse.dev
+  description: This is a simple API write in Golang and Fiber to manage transactions
+    used on Warren front-end test.
+  title: Swagger Transactions API
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: List transactions with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/ResponseDataWithPagination'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/Transaction'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseCode'
+      summary: List transactions with pagination
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction
+      parameters:
+      - description: Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTransaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/Transaction'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/ResponseCode'
+      summary: Create a new transaction
+      tags:
+      - Transactions
+  /transactions/:transactionsId:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a transaction by its unique ID
+      parameters:
+      - description: transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseCode'
+      summary: Delete a transaction by ID
+      tags:
+      - Transactions
+  /transactions/{transactionsId}:
+    get:
+      consumes:
+      - application/json
+      description: Find a transaction by its unique ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transactionsId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/Transaction'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseCode'
+      summary: Find a transaction by ID
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      description: Update a transaction by its unique ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transactionsId
+        required: true
+        type: integer
+      - description: Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateTransaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/UpdateTransaction'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ResponseCode'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/ResponseCode'
+      summary: Update a transaction by ID
+      tags:
+      - Transactions
+swagger: "2.0"

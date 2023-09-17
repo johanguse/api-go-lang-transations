@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// Account Transaction info
+// @Description Transaction information
 type Transaction struct {
 	ID          uint         `gorm:"primaryKey;autoIncrement"`
 	Title       string       `gorm:"size:255;not null"`
@@ -18,7 +20,7 @@ type Transaction struct {
 	ToUser      string       `gorm:"size:100;not null"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-}
+} //@name Transaction
 
 func CreateTransactionTable(DB *gorm.DB) {
 	DB.Migrator().CreateTable(&Transaction{})

@@ -36,7 +36,7 @@ type CreateTransactionSchema struct {
 	Amount      float64      `json:"amount" validate:"required,gte=0"`
 	FromUser    string       `json:"fromuser" validate:"required"`
 	ToUser      string       `json:"touser" validate:"required"`
-}
+} //@name CreateTransaction
 
 type UpdateTransactionSchema struct {
 	Title       string       `json:"title,omitempty"`
@@ -46,4 +46,4 @@ type UpdateTransactionSchema struct {
 	Date        string       `json:"date,omitempty"`
 	FromUser    string       `json:"fromuser,omitempty"`
 	ToUser      string       `json:"touser,omitempty"`
-}
+} //@name UpdateTransaction

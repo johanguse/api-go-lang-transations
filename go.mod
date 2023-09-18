@@ -1,6 +1,6 @@
 module api-go-lang-transations
 
-go 1.21
+go 1.21.1
 
 require (
 	github.com/go-playground/validator/v10 v10.15.4

@@ -23,7 +23,7 @@ go mod download
 ```
 3. Set up the database:
 ```console
-mysql -u root -p < database/schema.sql
+mysql -u root -p < database/sql/database.sql
 ```
 4. Start the server:
 ```console

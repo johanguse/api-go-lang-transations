@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "This is a simple API write in Golang and Fiber to manage transactions used on Warren front-end test.",
@@ -10,7 +13,7 @@
         },
         "version": "1.0"
     },
-    "host": "http://127.0.0.1:8000",
+    "host": "api-go-lang-transations.fly.dev",
     "basePath": "/api",
     "paths": {
         "/transactions": {

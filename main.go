@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/spf13/viper"
 
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 
@@ -38,16 +39,21 @@ func init() {
 
 // @license MIT
 
-// @host http://127.0.0.1:8000
+// @host api-go-lang-transations.fly.dev
 // @BasePath /api
+// @schemes https
 func main() {
+	RUN_MODE := viper.GetString("Environment")
+	if RUN_MODE == "" {
+		RUN_MODE = "dev"
+	}
 	app := fiber.New()
 	micro := fiber.New()
 
 	app.Mount("/api", micro)
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:3000",
+		AllowOrigins:     "http://localhost:3000, https://api-go-lang-transations.fly.dev",
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		AllowMethods:     "GET, POST, PATCH, DELETE",
 		AllowCredentials: true,
@@ -65,7 +71,7 @@ func main() {
 	micro.Get("/healthchecker", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "success",
-			"message": "Welcome to Golang, Fiber, and GORM",
+			"message": "Welcome to Golang, Fiber, and GORM. You are operating in " + RUN_MODE,
 		})
 	})
 

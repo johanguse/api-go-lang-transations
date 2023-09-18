@@ -9,27 +9,38 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
         with:
-          go-version: 1.21
-      - name: Build Go app
-        run: go build -o main .
-      - name: Publish Docker Image
-        uses: docker/build-push-action@v2
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Preset Image Name
+        run: echo "IMAGE_URL=$(echo ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:$(echo ${{ github.sha }} | cut -c1-7) | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Build and push Docker Image
+        uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
-          tags: ghcr.io/johanguse/api-go-lang-transations:latest
-      - name: Deploy on CapRover
+          tags: ${{ env.IMAGE_URL }}
+
+      - name: Deploy Image to CapRrover
         uses: caprover/deploy-from-github@v1.1.2
         with:
-          server: https://api-go-lang-transations.servercloud.app.br/
-          app: "api-go-lang-transations"
+          server: "${{ secrets.CAPTAIN_SERVER_URL }}"
+          app: "${{ secrets.CAPTAIN_APP_NAME }}"
           token: "${{ secrets.CAPTAIN_APP_TOKEN }}"
-          image: "ghcr.io/johanguse/api-go-lang-transations:latest"
+          image: ${{ env.IMAGE_URL }}

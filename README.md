@@ -7,7 +7,7 @@ I'm happy to say that I passed the test and worked at the company for some time.
 
 ### Prerequisites
 
-- Go 1.21 or laterg
+- Go 1.21 or later
 - MySQL 5.7 or later
 
 ### Installing

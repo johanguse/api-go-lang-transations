@@ -14,15 +14,22 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Publish Docker Image
-        uses: matootie/github-docker@v3.1.0
+      - name: Set up Go
+        uses: actions/setup-go@v2
         with:
-          accessToken: ${{ github.token }}
-          containerRegistry: true
+          go-version: 1.21.1
+      - name: Build Go app
+        run: go build -o main .
+      - name: Publish Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/johanguse/api-go-lang-transations:latest
       - name: Deploy on CapRover
         uses: caprover/deploy-from-github@v1.1.2
         with:
           server: https://api-go-lang-transations.servercloud.app.br/
           app: "api-go-lang-transations"
           token: "${{ secrets.CAPTAIN_APP_TOKEN }}"
-          image: "ghcr.io/khromov/sveltekit:latest"
+          image: "ghcr.io/johanguse/api-go-lang-transations:latest"

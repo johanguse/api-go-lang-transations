@@ -1,5 +1,5 @@
 # Transactions API
-In 2022, I took a front-end test to work at Warren. The API used in the test was hosted on Heroku, but it's currently offline. To continue consuming my front-end code, I decided to create my own API using Go and Fiber. You can find the front-end code for the project at https://github.com/johanguse/.
+In 2022, I took a front-end test to work at Warren. The API used in the test was hosted on Heroku, but it's currently offline. To continue consuming my front-end code, I decided to create my own API using Go and Fiber. You can find the front-end code for the project at https://github.com/johanguse/warren-desafio-web.
 
 I'm happy to say that I passed the test and worked at the company for some time.
 

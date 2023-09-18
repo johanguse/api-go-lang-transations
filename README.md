@@ -35,6 +35,9 @@ You can use the healthcheck to verify the status.
 
 ## API Reference
 
+### Swagger Documentatio
+https://api-go-lang-transations.fly.dev/api/swagger/index.html
+
 #### Postman Collection
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2499608-f2fe1930-17a0-4b66-9d67-1278fe0dc427?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D2499608-f2fe1930-17a0-4b66-9d67-1278fe0dc427%26entityType%3Dcollection%26workspaceId%3Dc837a68d-911f-48c1-8f68-a9b87bc7c51a)

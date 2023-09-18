@@ -1,0 +1,28 @@
+name: build + publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Publish Docker Image
+        uses: matootie/github-docker@v3.1.0
+        with:
+          accessToken: ${{ github.token }}
+          containerRegistry: true
+      - name: Deploy on CapRover
+        uses: caprover/deploy-from-github@v1.1.2
+        with:
+          server: https://api-go-lang-transations.servercloud.app.br/
+          app: "api-go-lang-transations"
+          token: "${{ secrets.CAPTAIN_APP_TOKEN }}"
+          image: "ghcr.io/khromov/sveltekit:latest"

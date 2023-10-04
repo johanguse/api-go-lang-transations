@@ -4,10 +4,9 @@ import (
 	"strconv"
 	"time"
 
-	database "api-go-lang-transations/database/schema"
 	"api-go-lang-transations/initializers"
 	"api-go-lang-transations/lib/enums"
-	"api-go-lang-transations/models"
+	model "api-go-lang-transations/models"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -21,23 +20,23 @@ import (
 // @Accept json
 // @Produce json
 // @Router /transactions [post]
-// @Param transaction body models.CreateTransactionSchema true "Transaction"
-// @Success 200 {object} models.JSONDataResult{data=[]database.Transaction}
-// @Failure	500	{object} models.JSONCodeResult{}
-// @Failure 502 {object} models.JSONCodeResult{}
+// @Param transaction body model.CreateTransactionSchema true "Transaction"
+// @Success 200 {object} model.JSONDataResult{data=[]model.Transaction}
+// @Failure	500	{object} model.JSONCodeResult{}
+// @Failure 502 {object} model.JSONCodeResult{}
 func CreateTransaction(c *fiber.Ctx) error {
-	var payload *models.CreateTransactionSchema
+	var payload *model.CreateTransactionSchema
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"code": 500, "status": "fail", "message": err.Error()})
 	}
 
-	errors := models.ValidateStruct(payload)
+	errors := model.ValidateStruct(payload)
 	if errors != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
 	now := time.Now()
-	newTransaction := database.Transaction{
+	newTransaction := model.Transaction{
 		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      enums.Status(payload.Status),
@@ -67,25 +66,25 @@ func CreateTransaction(c *fiber.Ctx) error {
 // @Produce json
 // @Router /transactions/{transactionsId} [put]
 // @Param transactionsId path int true "Transaction ID"
-// @Param transaction body models.UpdateTransactionSchema true "Transaction"
-// @Success 200 {object} models.JSONDataResult{data=[]models.UpdateTransactionSchema}
-// @Failure	500	{object} models.JSONCodeResult{}
-// @Failure 502 {object} models.JSONCodeResult{}
-// @Failure	404	{object} models.JSONCodeResult{}
+// @Param transaction body model.UpdateTransactionSchema true "Transaction"
+// @Success 200 {object} model.JSONDataResult{data=[]model.UpdateTransactionSchema}
+// @Failure	500	{object} model.JSONCodeResult{}
+// @Failure 502 {object} model.JSONCodeResult{}
+// @Failure	404	{object} model.JSONCodeResult{}
 func UpdateTransaction(c *fiber.Ctx) error {
 	idStr := c.Params("transactionsId")
 
-	var payload models.UpdateTransactionSchema
+	var payload model.UpdateTransactionSchema
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"code": 500, "status": "fail", "message": "Error parsing body: " + err.Error()})
 	}
 
-	errors := models.ValidateStruct(payload)
+	errors := model.ValidateStruct(payload)
 	if errors != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
-	var transaction database.Transaction
+	var transaction model.Transaction
 	result := initializers.DB.First(&transaction, "id = ?", idStr)
 
 	if result.Error != nil {
@@ -118,9 +117,9 @@ func UpdateTransaction(c *fiber.Ctx) error {
 // @Produce json
 // @Router /transactions/{transactionsId} [get]
 // @Param transactionsId path int true "Transaction ID"
-// @Success 200 {object} models.JSONDataResult{data=[]database.Transaction}
-// @Failure	500	{object} models.JSONCodeResult{}
-// @Failure	404	{object} models.JSONCodeResult{}
+// @Success 200 {object} model.JSONDataResult{data=[]model.Transaction}
+// @Failure	500	{object} model.JSONCodeResult{}
+// @Failure	404	{object} model.JSONCodeResult{}
 func FindTransactionById(c *fiber.Ctx) error {
 	idStr := c.Params("transactionsId")
 
@@ -130,7 +129,7 @@ func FindTransactionById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"code": 500, "status": "fail", "message": "Invalid ID"})
 	}
 
-	var transaction database.Transaction
+	var transaction model.Transaction
 	result := initializers.DB.First(&transaction, id)
 
 	if result.RowsAffected == 0 {
@@ -150,8 +149,8 @@ func FindTransactionById(c *fiber.Ctx) error {
 // @Router /transactions [get]
 // @Param page query int false "Page number"
 // @Param limit query int false "Number of items per page"
-// @Success 200 {object} models.JSONDataResultWithPagination{data=[]database.Transaction}
-// @Failure	500	{object} models.JSONCodeResult{}
+// @Success 200 {object} model.JSONDataResultWithPagination{data=[]model.Transaction}
+// @Failure	500	{object} model.JSONCodeResult{}
 func ListTransactions(c *fiber.Ctx) error {
 	var page = c.Query("page", "1")
 	var limit = c.Query("limit", "10")
@@ -168,11 +167,11 @@ func ListTransactions(c *fiber.Ctx) error {
 
 	offset := (intPage - 1) * intLimit
 
-	var transactions []database.Transaction
+	var transactions []model.Transaction
 	var count int64
 
 	initializers.DB.Offset(offset).Limit(intLimit).Find(&transactions)
-	initializers.DB.Model(&database.Transaction{}).Count(&count)
+	initializers.DB.Model(&model.Transaction{}).Count(&count)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":   200,
@@ -193,9 +192,9 @@ func ListTransactions(c *fiber.Ctx) error {
 // @Produce		json
 // @Router /transactions/:transactionsId [delete]
 // @Param			id	path		int	true	"transaction ID"
-// @Success 200 {object} models.JSONCodeResult{}
-// @Failure	404	{object} models.JSONCodeResult{}
-// @Failure 500 {object} models.JSONCodeResult{}
+// @Success 200 {object} model.JSONCodeResult{}
+// @Failure	404	{object} model.JSONCodeResult{}
+// @Failure 500 {object} model.JSONCodeResult{}
 func DeleteTransaction(c *fiber.Ctx) error {
 	idStr := c.Params("transactionsId")
 
@@ -208,7 +207,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 		})
 	}
 
-	var transaction database.Transaction
+	var transaction model.Transaction
 	transaction.ID = uint(id)
 	result := initializers.DB.Delete(&transaction)
 	if result.Error != nil {

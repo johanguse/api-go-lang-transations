@@ -1,7 +1,7 @@
 package initializers
 
 import (
-	database "api-go-lang-transations/database/schema"
+	model "api-go-lang-transations/models"
 	"fmt"
 	"log"
 	"os"
@@ -27,7 +27,7 @@ func ConnectDB(config *Config) {
 	DB.Logger = logger.Default.LogMode(logger.Info)
 
 	log.Println("Running Migrations")
-	DB.AutoMigrate(&database.Transaction{})
+	DB.AutoMigrate(&model.Transaction{})
 
 	log.Println("🚀 Connected Successfully to the Database")
 }

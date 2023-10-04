@@ -50,10 +50,9 @@ func main() {
 	app := fiber.New()
 	micro := fiber.New()
 
-	app.Mount("/api", micro)
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:3000, https://api-go-lang-transations.fly.dev",
+		AllowOrigins:     "http://localhost:8080, https://api-go-lang-transations.fly.dev, https://*.netlify.app",
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		AllowMethods:     "GET, POST, PATCH, DELETE",
 		AllowCredentials: true,
@@ -76,6 +75,8 @@ func main() {
 	})
 
 	micro.Get("/swagger/*", fiberSwagger.WrapHandler)
+
+	app.Mount("/api", micro)
 
 	log.Fatal(app.Listen(":8000"))
 }

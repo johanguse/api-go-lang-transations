@@ -5,13 +5,13 @@ import (
 
 	"gorm.io/gorm"
 
-	database "api-go-lang-transations/database/schema"
+	model "api-go-lang-transations/models"
 )
 
 type TransactionSeed struct{}
 
 func (t *TransactionSeed) Seed(db *gorm.DB) {
-	transactions := []database.Transaction{
+	transactions := []model.Transaction{
 		{
 			Title:       "Resgate",
 			Description: "et labore proident aute nulla",

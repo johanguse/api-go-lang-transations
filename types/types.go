@@ -1,4 +1,10 @@
-package models
+package types
+
+type ErrorResponse struct {
+	Field string `json:"field"`
+	Tag   string `json:"tag"`
+	Value string `json:"value,omitempty"`
+}
 
 type JSONDataResult struct {
 	Code    int         `json:"code" `
